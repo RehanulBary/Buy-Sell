@@ -136,7 +136,7 @@ export default function GetProduct() {
                 </div>
             </div>
 
-            <footer className="flex justify-center p-4 bg-gray-800 text-white text-sm">
+            <footer className="flex justify-center p-5 bg-gray-800 text-white">
                 Let<span className="text-amber-500">'</span>s serve each other 🤝
             </footer>
         </div>
