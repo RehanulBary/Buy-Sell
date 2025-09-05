@@ -21,7 +21,6 @@ export default function InputForm() {
     formData.append("productCategory", productCategory);
     formData.append("productContact", productContact);
     formData.append("productKey", productKey);
-
     if (productImage) formData.append("productImage", productImage);
 
     try {
@@ -45,36 +44,30 @@ export default function InputForm() {
 
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col">
-      {/* Navbar Wrapper */}
-      <div className="fixed top-0 left-0 w-full z-20">
-        <nav className="bg-gray-800 text-gray-100 shadow-md px-4 py-3">
-          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-3 sm:space-y-0">
-            <div
-              onClick={() => navigate("/")}
-              className="text-2xl font-bold hover:text-gray-300 transition-colors duration-300 cursor-pointer"
-            >
-              Home
-            </div>
-
-            <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-3 space-y-2 sm:space-y-0 w-full sm:w-auto">
-              <button
-                className="bg-gray-800 text-gray-100 px-5 py-2 rounded-lg shadow-md hover:bg-gray-700 hover:scale-105 transition-all hover:cursor-pointer duration-300 w-full sm:w-auto"
-                onClick={() => navigate("/get_product")}
-              >
-                My Products
-              </button>
-            </div>
+      {/* Navbar */}
+      <nav className="bg-gray-800 text-gray-100 shadow-md px-4 py-3">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-3 sm:space-y-0">
+          <div
+            onClick={() => navigate("/")}
+            className="text-2xl font-bold hover:text-gray-300 transition-colors duration-300 cursor-pointer"
+          >
+            Home
           </div>
-        </nav>
-      </div>
 
-      {/* Spacer for Navbar */}
-      <div className="h-16"></div>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-3 space-y-2 sm:space-y-0 w-full sm:w-auto">
+            <button
+              className="bg-gray-800 text-gray-100 px-5 py-2 rounded-lg shadow-md hover:bg-gray-700 hover:scale-105 transition-all hover:cursor-pointer duration-300 w-full sm:w-auto"
+              onClick={() => navigate("/get_product")}
+            >
+              My Products
+            </button>
+          </div>
+        </div>
+      </nav>
 
       {/* Centered Form */}
-      <div className="flex justify-center mt-10 sm:mt-0 items-center flex-grow px-4 py-5">
-        <div className="w-full max-w-xl bg-gray-800 border border-gray-700 rounded-lg shadow-lg p-6 m-2
-                        md:my-auto md:mx-auto">
+      <div className="flex justify-center items-center flex-grow px-4 py-5">
+        <div className="w-full max-w-xl bg-gray-800 border border-gray-700 rounded-lg shadow-lg p-6 m-2 md:my-auto md:mx-auto">
           <h2 className="text-2xl font-bold mb-6 text-gray-100 text-center">
             Product Form
           </h2>
@@ -207,6 +200,10 @@ export default function InputForm() {
           </form>
         </div>
       </div>
+      {/* Footer */}
+      <footer className="flex justify-center p-5 bg-gray-800 text-white">
+        Let<span className="text-amber-500">'</span>s serve each other 🤝
+      </footer>
     </div>
   );
 }
