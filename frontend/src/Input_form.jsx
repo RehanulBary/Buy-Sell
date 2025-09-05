@@ -49,10 +49,12 @@ export default function InputForm() {
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-3 sm:space-y-0">
           <div
             onClick={() => navigate("/")}
-            className="text-2xl font-bold hover:text-gray-300 transition-colors duration-300 cursor-pointer"
+            className="flex items-center text-2xl font-bold hover:text-gray-300 transition-colors duration-300 cursor-pointer"
           >
+            <img src="/logo.png" alt="Logo" className="w-8 h-8 object-contain mr-2" />
             Home
           </div>
+
 
           <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-3 space-y-2 sm:space-y-0 w-full sm:w-auto">
             <button

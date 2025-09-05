@@ -59,10 +59,11 @@ export default function Home() {
             <nav className="bg-gray-800 text-gray-100 shadow-md px-4 py-3">
                 <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-3 sm:space-y-0">
                     <div
-                        onClick={homeClick} // <-- pass the function reference
-                        className="text-2xl font-bold hover:text-gray-300 transition-colors duration-300 cursor-pointer"
+                        onClick={homeClick}
+                        className="flex items-center text-2xl font-bold hover:text-gray-300 transition-colors duration-300 cursor-pointer mr-2"
                     >
-                        Home
+                        <img src="/logo.png" className="w-8 h-8 object-contain" alt="Logo" />
+                        <span className="ml-2">Home</span>
                     </div>
 
                     <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-3 space-y-3 sm:space-y-0 w-full sm:w-auto">
