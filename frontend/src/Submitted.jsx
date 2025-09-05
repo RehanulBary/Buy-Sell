@@ -10,10 +10,16 @@ export default function Submitted() {
     <div className="min-h-screen bg-gray-100 flex flex-col">
       {/* Navbar */}
       <nav className="bg-gray-900 text-gray-100 shadow-md px-4 py-3 fixed w-full top-0 left-0 z-20">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div onClick={()=> navigate("/")} className="text-2xl font-bold cursor-pointer hover:text-gray-300 transition-colors">
-            Home
+        <div className="max-w-7xl mx-auto items-center">
+          <div className="max-w-7xl mx-auto flex justify-between items-center">
+            <div className="flex items-center cursor-pointer" onClick={() => navigate("/")}>
+              <img src="/logo.png" className="w-8 h-8 mr-3" alt="Logo" />
+              <span className="text-2xl font-bold hover:text-gray-300 transition-colors">
+                Home
+              </span>
+            </div>
           </div>
+
         </div>
       </nav>
 
