@@ -55,7 +55,6 @@ export default function InputForm() {
             Home
           </div>
 
-
           <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-3 space-y-2 sm:space-y-0 w-full sm:w-auto">
             <button
               className="bg-gray-800 text-gray-100 px-5 py-2 rounded-lg shadow-md hover:bg-gray-700 hover:scale-105 transition-all hover:cursor-pointer duration-300 w-full sm:w-auto"
@@ -68,13 +67,13 @@ export default function InputForm() {
       </nav>
 
       {/* Centered Form */}
-      <div className="flex justify-center items-center flex-grow px-4 py-5">
-        <div className="w-full max-w-xl bg-gray-800 border border-gray-700 rounded-lg shadow-lg p-6 m-2 md:my-auto md:mx-auto">
-          <h2 className="text-2xl font-bold mb-6 text-gray-100 text-center">
+      <div className="flex justify-center items-center flex-grow px-4 py-3">
+        <div className="w-full max-w-xl bg-gray-800 border border-gray-700 rounded-lg shadow-lg p-4 m-2 md:my-auto md:mx-auto">
+          <h2 className="text-2xl font-bold mb-4 text-gray-100 text-center">
             Product Form
           </h2>
 
-          <form onSubmit={handleData} className="space-y-5" encType="multipart/form-data">
+          <form onSubmit={handleData} className="space-y-4" encType="multipart/form-data">
             {/* Name */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4">
               <label className="mb-1 sm:mb-0 w-full sm:w-32 font-medium text-gray-300">
@@ -82,7 +81,7 @@ export default function InputForm() {
               </label>
               <input
                 type="text"
-                className="flex-1 border-2 border-gray-700 p-2 rounded bg-gray-700 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all duration-200"
+                className="flex-1 border-2 border-gray-700 p-1.5 rounded bg-gray-700 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all duration-200"
                 value={productName}
                 onChange={(e) => setProductName(e.target.value)}
                 placeholder="Enter product name"
@@ -97,7 +96,7 @@ export default function InputForm() {
               </label>
               <input
                 type="text"
-                className="flex-1 border-2 border-gray-700 p-2 rounded bg-gray-700 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all duration-200"
+                className="flex-1 border-2 border-gray-700 p-1.5 rounded bg-gray-700 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all duration-200"
                 value={productPrice}
                 onChange={(e) => setProductPrice(e.target.value)}
                 placeholder="Enter product price"
@@ -112,7 +111,7 @@ export default function InputForm() {
               </label>
               <input
                 type="password"
-                className="flex-1 border-2 border-gray-700 p-2 rounded bg-gray-700 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all duration-200"
+                className="flex-1 border-2 border-gray-700 p-1.5 rounded bg-gray-700 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all duration-200"
                 value={productKey}
                 onChange={(e) => setProductKey(e.target.value)}
                 placeholder="Enter a secret key"
@@ -126,7 +125,7 @@ export default function InputForm() {
                 Description:
               </label>
               <textarea
-                className="flex-1 border-2 border-gray-700 p-2 rounded h-24 resize-none bg-gray-700 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all duration-200"
+                className="flex-1 border-2 border-gray-700 p-1.5 rounded h-20 resize-none bg-gray-700 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all duration-200"
                 value={productDescription}
                 onChange={(e) => setProductDescription(e.target.value)}
                 placeholder="Enter product description"
@@ -141,7 +140,7 @@ export default function InputForm() {
               </label>
               <input
                 type="text"
-                className="flex-1 border-2 border-gray-700 p-2 rounded bg-gray-700 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all duration-200"
+                className="flex-1 border-2 border-gray-700 p-1.5 rounded bg-gray-700 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all duration-200"
                 value={productCategory}
                 onChange={(e) => setProductCategory(e.target.value)}
                 placeholder="Enter category"
@@ -156,7 +155,7 @@ export default function InputForm() {
               </label>
               <input
                 type="tel"
-                className="flex-1 border-2 border-gray-700 p-2 rounded bg-gray-700 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all duration-200"
+                className="flex-1 border-2 border-gray-700 p-1.5 rounded bg-gray-700 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all duration-200"
                 value={productContact}
                 onChange={(e) => setProductContact(e.target.value)}
                 placeholder="Enter contact number"
@@ -180,7 +179,7 @@ export default function InputForm() {
                 />
                 <label
                   htmlFor="fileInput"
-                  className="bg-gray-700 hover:bg-gray-600 text-gray-100 px-4 py-2 rounded cursor-pointer transition-all duration-200"
+                  className="bg-gray-700 hover:bg-gray-600 text-gray-100 px-4 py-1.5 rounded cursor-pointer transition-all duration-200"
                 >
                   Choose Image
                 </label>
@@ -202,6 +201,7 @@ export default function InputForm() {
           </form>
         </div>
       </div>
+
       {/* Footer */}
       <footer className="flex justify-center p-5 bg-gray-800 text-white">
         Let<span className="text-amber-500">'</span>s serve each other 🤝
