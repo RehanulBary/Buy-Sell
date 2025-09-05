@@ -54,7 +54,7 @@ export default function GetProduct() {
 
                     <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-3 space-y-3 sm:space-y-0 w-full sm:w-auto">
                         <button
-                            className="bg-red-700 text-gray-100 px-5 py-2 rounded-lg shadow-md hover:bg-red-600 hover:scale-105 hover:cursor-pointer transition-all duration-300 w-full sm:w-auto"
+                            className="bg-red-700 text-gray-100 px-4 py-1 rounded-lg shadow-md hover:bg-red-600 hover:scale-105 hover:cursor-pointer transition-all duration-300 w-full sm:w-auto"
                             onClick={() => navigate("/remove_product")}
                         >
                             Remove Product
@@ -65,42 +65,43 @@ export default function GetProduct() {
 
             {/* Centered container */}
             <div className="flex flex-col justify-center items-center flex-grow px-4 py-5">
-                <div className="w-full max-w-lg bg-gray-800 border border-gray-700 rounded-lg shadow-lg p-6 m-2">
-                    <h2 className="text-xl sm:text-2xl font-bold mb-6 text-gray-100 text-center">
+                <div className="w-full max-w-md bg-gray-800 border border-gray-700 rounded-lg shadow-lg p-4 m-2">
+                    <h2 className="text-lg sm:text-xl font-bold mb-4 text-gray-100 text-center">
                         Fetch Product by ID
                     </h2>
 
                     {/* Inputs */}
-                    <div className="flex flex-col sm:flex-row w-full gap-2 mb-6">
+                    {/* Inputs */}
+                    <div className="flex flex-wrap sm:flex-nowrap w-full gap-2 mb-4 items-center">
                         <input
                             type="text"
                             placeholder="Enter Product ID"
                             value={inputId}
                             onChange={(e) => setInputId(e.target.value)}
-                            className="flex-1 p-2 rounded bg-gray-700 text-gray-100 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                            className="flex-1 min-w-[120px] p-2 rounded bg-gray-700 text-gray-100 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
                         />
                         <input
                             type="password"
                             placeholder="Enter Product Key"
                             value={productKey}
                             onChange={(e) => setProductKey(e.target.value)}
-                            className="flex-1 p-2 rounded bg-gray-700 text-gray-100 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                            className="flex-1 min-w-[120px] p-2 rounded bg-gray-700 text-gray-100 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
                         />
                         <button
                             onClick={fetchProduct}
-                            className="bg-gray-700 hover:bg-gray-600 text-gray-100 px-4 py-2 rounded shadow-md transition-all duration-200 hover:cursor-pointer"
+                            className="bg-gray-700 hover:bg-gray-600 text-gray-100 px-4 py-2 rounded shadow-md transition-all duration-200 hover:cursor-pointer flex-shrink-0"
                         >
                             Find
                         </button>
                     </div>
 
-                    {loading && <div className="text-gray-100 mb-4 text-center">Loading...</div>}
-                    {error && <div className="text-red-500 mb-4 text-center">{error}</div>}
+                    {loading && <div className="text-gray-100 mb-2 text-center">Loading...</div>}
+                    {error && <div className="text-red-500 mb-2 text-center">{error}</div>}
 
                     {/* Product Card */}
                     {product && (
-                        <div className="w-full bg-gray-700 border border-gray-600 rounded-lg shadow-lg p-3 text-gray-100">
-                            <h2 className="text-lg font-bold mb-2 text-center sm:text-left">
+                        <div className="w-full bg-gray-700 border border-gray-600 rounded-lg shadow-lg p-2 text-gray-100">
+                            <h2 className="text-base font-bold mb-2 text-center sm:text-left">
                                 Product Details
                             </h2>
                             <div className="space-y-1 text-sm">
@@ -113,19 +114,19 @@ export default function GetProduct() {
                             </div>
 
                             {product.image && (
-                                <div className="mt-2 flex justify-center">
+                                <div className="mt-1 flex justify-center">
                                     <img
                                         src={`http://localhost:3000/uploads/${product.image}`}
                                         alt={product.name}
-                                        className="w-full max-w-sm max-h-32 object-contain rounded"
+                                        className="w-full max-w-xs max-h-24 object-contain rounded"
                                     />
                                 </div>
                             )}
 
-                            <div className="mt-2">
+                            <div className="mt-1">
                                 <button
                                     onClick={() => navigate("/buy_product", { state: { product } })}
-                                    className="w-full bg-gray-600 hover:bg-gray-500 text-gray-100 px-3 py-1 rounded shadow transition-all duration-200 hover:cursor-pointer text-sm"
+                                    className="w-full bg-gray-600 hover:bg-gray-500 text-gray-100 px-2 py-1 rounded shadow transition-all duration-200 hover:cursor-pointer text-sm"
                                 >
                                     More information
                                 </button>
@@ -135,7 +136,7 @@ export default function GetProduct() {
                 </div>
             </div>
 
-            <footer className="flex justify-center p-5 bg-gray-800 text-white">
+            <footer className="flex justify-center p-4 bg-gray-800 text-white text-sm">
                 Let<span className="text-amber-500">'</span>s serve each other 🤝
             </footer>
         </div>
