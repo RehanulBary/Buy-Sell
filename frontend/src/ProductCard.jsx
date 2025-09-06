@@ -39,6 +39,7 @@ export default function ProductCard({ products }) {
                 {product.name}
               </h2>
               <p className="text-gray-400 text-xs">{product.category}</p>
+              <p className="text-gray-400 text-xs">Location: {product.location}</p> {/* New */}
               <p className="text-gray-100 text-xs line-clamp-2">{product.description}</p>
             </div>
 
@@ -48,7 +49,7 @@ export default function ProductCard({ products }) {
                 Price: ${product.price}
               </p>
               <button
-                onClick={() => navigate("/buy_product", { state: { product } })}
+                onClick={() => navigate("/product_info", { state: { product } })}
                 className="w-full bg-gray-700 hover:bg-gray-600 text-gray-100 px-2 py-1 rounded shadow transition-all duration-200 hover:cursor-pointer hover:scale-105 text-xs"
               >
                 Buy Now

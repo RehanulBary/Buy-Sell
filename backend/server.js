@@ -30,14 +30,14 @@ con.connect((err) => {
 
 // Add product
 app.post("/enter_data", upload.single("productImage"), (req, res) => {
-  const { productName, productPrice, productDescription, productCategory, productContact, productKey } = req.body;
+  const { productName, productPrice, productDescription, productCategory, productContact, productKey, location } = req.body;
   const imgUrl = req.file ? req.file.filename : null;
 
   const sql = `
-    INSERT INTO forsale (name, price, description, category, contact, image, product_key)
-    VALUES (?,?,?,?,?,?,?)
+    INSERT INTO forsale (name, price, description, category, contact, image, product_key, location)
+    VALUES (?,?,?,?,?,?,?,?)
   `;
-  const values = [productName, productPrice, productDescription, productCategory, productContact, imgUrl, productKey];
+  const values = [productName, productPrice, productDescription, productCategory, productContact, imgUrl, productKey, location];
 
   con.query(sql, values, (err, result) => {
     if (err) {
@@ -64,7 +64,7 @@ app.get("/get_product", (req, res) => {
       return res.json({ success: false, error: "Incorrect product key" });
     }
 
-    res.json({ success: true, product });
+    res.json({ success: true, product }); // product now includes location
   });
 });
 
@@ -92,30 +92,33 @@ app.delete("/remove_product", (req, res) => {
 
 // Search products
 app.post("/search_products", (req, res) => {
-    const { search } = req.body;
-  
-    // If search is empty, return random products (same as /)
-    if (!search || search.trim() === "") {
-      const sql = "SELECT * FROM forsale ORDER BY RAND() LIMIT 20";
-      con.query(sql, (err, result) => {
-        if (err) return res.status(500).json({ success: false, error: "Error fetching data" });
-        return res.json({ success: true, products: result });
-      });
-      return;
-    }
-  
+  const { search, location } = req.body;
+
+  let sql = "SELECT * FROM forsale";
+  let params = [];
+
+  if (search && search.trim() !== "" && location && location.trim() !== "") {
+    sql += " WHERE (name LIKE ? OR category LIKE ? OR description LIKE ?) AND location LIKE ?";
     const searchTerm = `%${search}%`;
-    const sql = `
-      SELECT * FROM forsale
-      WHERE name LIKE ? OR category LIKE ? OR description LIKE ?
-      ORDER BY id DESC
-    `;
-  
-    con.query(sql, [searchTerm, searchTerm, searchTerm], (err, results) => {
-      if (err) return res.status(500).json({ success: false, error: "Database error" });
-      res.json({ success: true, products: results }); // ✅ wrap results in "products"
-    });
+    const locationTerm = `%${location}%`;
+    params = [searchTerm, searchTerm, searchTerm, locationTerm];
+  } else if (search && search.trim() !== "") {
+    sql += " WHERE name LIKE ? OR category LIKE ? OR description LIKE ?";
+    const searchTerm = `%${search}%`;
+    params = [searchTerm, searchTerm, searchTerm];
+  } else if (location && location.trim() !== "") {
+    sql += " WHERE location LIKE ?";
+    const locationTerm = `%${location}%`;
+    params = [locationTerm];
+  }
+
+  sql += " ORDER BY id DESC";
+
+  con.query(sql, params, (err, results) => {
+    if (err) return res.status(500).json({ success: false, error: "Database error" });
+    res.json({ success: true, products: results });
   });
+});
 
 // Home: random 20 products
 app.get("/", (req, res) => {

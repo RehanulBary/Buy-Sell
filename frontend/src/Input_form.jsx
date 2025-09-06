@@ -10,6 +10,7 @@ export default function InputForm() {
   const [productCategory, setProductCategory] = useState("");
   const [productContact, setProductContact] = useState("");
   const [productKey, setProductKey] = useState("");
+  const [location, setLocation] = useState(""); // New field
 
   async function handleData(e) {
     e.preventDefault();
@@ -21,6 +22,7 @@ export default function InputForm() {
     formData.append("productCategory", productCategory);
     formData.append("productContact", productContact);
     formData.append("productKey", productKey);
+    formData.append("location", location); // append location
     if (productImage) formData.append("productImage", productImage);
 
     try {
@@ -160,6 +162,21 @@ export default function InputForm() {
                 onChange={(e) => setProductContact(e.target.value)}
                 placeholder="Enter contact number"
                 pattern="[0-9]{11}"
+                required
+              />
+            </div>
+
+            {/* Location */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4">
+              <label className="mb-1 sm:mb-0 w-full sm:w-32 font-medium text-gray-300">
+                Location:
+              </label>
+              <input
+                type="text"
+                className="flex-1 border-2 border-gray-700 p-1.5 rounded bg-gray-700 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all duration-200"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                placeholder="Enter product location"
                 required
               />
             </div>

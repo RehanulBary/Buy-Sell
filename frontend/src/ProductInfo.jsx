@@ -1,7 +1,7 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-export default function BuyProduct() {
+export default function ProductInfo() {
   const navigate = useNavigate();
   const location = useLocation();
   const product = location.state?.product;
@@ -37,28 +37,35 @@ export default function BuyProduct() {
               <img
                 src={`http://localhost:3000/uploads/${product.image}`}
                 alt={product.name}
-                className="w-full h-auto object-contain"
+                className="w-full h-full object-contain"
               />
             </div>
           )}
 
           {/* Product Details */}
-          <div className="md:w-1/2 p-6 flex flex-col justify-center space-y-4">
+          <div className="md:w-1/2 p-6 flex flex-col justify-center space-y-3">
             <h1 className="text-2xl font-bold text-gray-100 text-center md:text-left">
               {product.name}
             </h1>
-            <p className="text-gray-400 text-sm text-center md:text-left">
-              Product ID: {product.id}
-            </p>
-            <p className="text-gray-400 text-sm text-center md:text-left">
-              {product.category}
-            </p>
-            <p className="text-gray-100 text-center md:text-left">
+
+            {/* Meta Info: ID, Category, Location */}
+            <div className="flex flex-col space-y-1 text-gray-400 text-sm text-center md:text-left">
+              <span>Product ID: {product.id}</span>
+              <span>Category: {product.category}</span>
+              <span>Location: {product.location}</span>
+            </div>
+
+            {/* Description */}
+            <p className="text-gray-100 text-sm text-center md:text-left">
               {product.description}
             </p>
+
+            {/* Price */}
             <p className="text-lg font-semibold text-gray-100 text-center md:text-left">
               Price: ${product.price}
             </p>
+
+            {/* Contact */}
             <p className="text-gray-400 text-sm text-center md:text-left">
               Seller Contact: {product.contact}
             </p>

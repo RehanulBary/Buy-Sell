@@ -9,7 +9,7 @@ import InputForm from './Input_form.jsx'
 import Submitted from './Submitted.jsx'
 import GetProduct from './GetProduct.jsx'
 import RemoveProduct from './RemoveProduct.jsx'
-import BuyProduct from './BuyProducs.jsx'
+import ProductInfo from './ProductInfo.jsx'
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
@@ -19,7 +19,7 @@ createRoot(document.getElementById('root')).render(
       <Route path='/sell_submitted' element={<Submitted/>}/>
       <Route path='/get_product' element={<GetProduct/>}/>
       <Route path='/remove_product' element={<RemoveProduct/>}/>
-      <Route path='/buy_product' element={<BuyProduct/>}/>
+      <Route path='/product_info' element={<ProductInfo/>}/>
     </Routes>
   </BrowserRouter>
 )
