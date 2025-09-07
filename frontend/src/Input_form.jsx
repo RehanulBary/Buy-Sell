@@ -15,6 +15,8 @@ export default function InputForm() {
   async function handleData(e) {
     e.preventDefault();
 
+    console.log("Submitting form..."); // ✅ Debug: form triggered
+
     const formData = new FormData();
     formData.append("productName", productName);
     formData.append("productPrice", productPrice);
@@ -22,18 +24,21 @@ export default function InputForm() {
     formData.append("productCategory", productCategory);
     formData.append("productContact", productContact);
     formData.append("productKey", productKey);
-    formData.append("location", location); // append location
-    // Only change the fetchData URL to Railway backend
+    formData.append("location", location);
     if (productImage) formData.append("productImage", productImage);
 
     try {
+      console.log("Sending fetch request to backend...");
       const response = await fetch(
         "https://buy-sell-production-b9f0.up.railway.app/enter_data",
         { method: "POST", body: formData }
       );
 
+      console.log("Fetch response received:", response);
 
       const data = await response.json();
+
+      console.log("Response JSON:", data);
 
       if (data.success) {
         const productId = data.productId;
@@ -45,6 +50,7 @@ export default function InputForm() {
       console.error("Error submitting product:", err);
     }
   }
+
 
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col">
