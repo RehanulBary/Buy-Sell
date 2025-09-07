@@ -1,0 +1,8 @@
+{
+    "name": "root",
+    "private": true,
+    "scripts": {
+      "start": "node backend/server.js"
+    }
+  }
+  
