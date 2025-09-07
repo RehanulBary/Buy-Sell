@@ -25,7 +25,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// MySQL connection (using Railway env vars)
+// MySQL connection
 const con = mysql.createConnection({
   host: process.env.DB_HOST || "localhost",
   user: process.env.DB_USER || "root",
@@ -35,11 +35,13 @@ const con = mysql.createConnection({
 });
 
 con.connect((err) => {
-  if (err) console.log("❌ Error connecting database:", err);
+  if (err) console.error("❌ Error connecting database:", err);
   else console.log("✅ Database connected");
 });
 
-// Add product
+// --------------------
+// Add product route
+// --------------------
 app.post("/enter_data", upload.single("productImage"), (req, res) => {
   const {
     productName,
@@ -51,15 +53,37 @@ app.post("/enter_data", upload.single("productImage"), (req, res) => {
     location
   } = req.body;
 
+  // Ensure required fields exist
+  if (
+    !productName ||
+    !productPrice ||
+    !productDescription ||
+    !productCategory ||
+    !productContact ||
+    !productKey ||
+    !location
+  ) {
+    return res
+      .status(400)
+      .json({ success: false, error: "All fields are required" });
+  }
+
+  // Convert price to number
+  const priceNumber = parseFloat(productPrice);
+  if (isNaN(priceNumber)) {
+    return res.status(400).json({ success: false, error: "Price must be a number" });
+  }
+
   const imgUrl = req.file ? req.file.filename : null;
 
   const sql = `
-    INSERT INTO forsale (name, price, description, category, contact, image, product_key, location)
-    VALUES (?,?,?,?,?,?,?,?)
+    INSERT INTO forsale 
+    (name, price, description, category, contact, image, product_key, location)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   `;
   const values = [
     productName,
-    productPrice,
+    priceNumber,
     productDescription,
     productCategory,
     productContact,
@@ -70,11 +94,14 @@ app.post("/enter_data", upload.single("productImage"), (req, res) => {
 
   con.query(sql, values, (err, result) => {
     if (err) {
-      console.log("Error inserting data:", err);
-      return res
-        .status(500)
-        .json({ success: false, error: "Database insertion failed" });
+      console.error("❌ Error inserting data:");
+      console.error("SQL:", sql);
+      console.error("Values:", values);
+      console.error("Error:", err);
+      return res.status(500).json({ success: false, error: "Database insertion failed" });
     }
+
+    console.log("✅ Product inserted:", result.insertId);
     res.json({
       success: true,
       message: "Product added successfully",
@@ -83,99 +110,88 @@ app.post("/enter_data", upload.single("productImage"), (req, res) => {
   });
 });
 
-// Fetch product safely
+// --------------------
+// Fetch product
+// --------------------
 app.get("/get_product", (req, res) => {
   const { id, key } = req.query;
-  if (!id) return res.json({ success: false, error: "No product ID provided" });
-  if (!key)
-    return res.json({ success: false, error: "No product key provided" });
+  if (!id || !key) return res.status(400).json({ success: false, error: "Product ID and Key required" });
 
   const sql = "SELECT * FROM forsale WHERE id = ?";
   con.query(sql, [id], (err, results) => {
-    if (err) return res.json({ success: false, error: "Database error" });
-    if (results.length === 0)
-      return res.json({ success: false, error: "Product not found" });
+    if (err) return res.status(500).json({ success: false, error: "Database error" });
+    if (results.length === 0) return res.status(404).json({ success: false, error: "Product not found" });
 
     const product = results[0];
-    if (product.product_key !== key) {
-      return res.json({ success: false, error: "Incorrect product key" });
-    }
+    if (product.product_key !== key)
+      return res.status(403).json({ success: false, error: "Incorrect product key" });
 
     res.json({ success: true, product });
   });
 });
 
-// Remove product safely
+// --------------------
+// Remove product
+// --------------------
 app.delete("/remove_product", (req, res) => {
   const { productId, productKey } = req.body;
-  if (!productId || !productKey) {
-    return res
-      .status(400)
-      .json({ success: false, error: "Product ID and Product Key required" });
-  }
+  if (!productId || !productKey)
+    return res.status(400).json({ success: false, error: "Product ID and Product Key required" });
 
   const sql = "DELETE FROM forsale WHERE id = ? AND product_key = ?";
   con.query(sql, [productId, productKey], (err, result) => {
-    if (err) {
-      console.log("Error deleting product:", err);
-      return res.status(500).json({ success: false, error: "Database error" });
-    }
-
-    if (result.affectedRows === 0) {
-      return res.json({ success: false, error: "Invalid Product ID or Key" });
-    }
+    if (err) return res.status(500).json({ success: false, error: "Database error" });
+    if (result.affectedRows === 0) return res.status(404).json({ success: false, error: "Invalid Product ID or Key" });
 
     res.json({ success: true, message: "Product removed successfully" });
   });
 });
 
+// --------------------
 // Search products
+// --------------------
 app.post("/search_products", (req, res) => {
   const { search, location } = req.body;
 
   let sql = "SELECT * FROM forsale";
-  let params = [];
+  const params = [];
 
   if (search && location) {
-    sql +=
-      " WHERE (name LIKE ? OR category LIKE ? OR description LIKE ?) AND location LIKE ?";
-    const searchTerm = `%${search}%`;
-    const locationTerm = `%${location}%`;
-    params = [searchTerm, searchTerm, searchTerm, locationTerm];
+    sql += " WHERE (name LIKE ? OR category LIKE ? OR description LIKE ?) AND location LIKE ?";
+    const s = `%${search}%`;
+    const l = `%${location}%`;
+    params.push(s, s, s, l);
   } else if (search) {
     sql += " WHERE name LIKE ? OR category LIKE ? OR description LIKE ?";
-    const searchTerm = `%${search}%`;
-    params = [searchTerm, searchTerm, searchTerm];
+    const s = `%${search}%`;
+    params.push(s, s, s);
   } else if (location) {
     sql += " WHERE location LIKE ?";
-    const locationTerm = `%${location}%`;
-    params = [locationTerm];
+    const l = `%${location}%`;
+    params.push(l);
   }
 
   sql += " ORDER BY id DESC";
 
   con.query(sql, params, (err, results) => {
-    if (err)
-      return res.status(500).json({ success: false, error: "Database error" });
+    if (err) return res.status(500).json({ success: false, error: "Database error" });
     res.json({ success: true, products: results });
   });
 });
 
+// --------------------
 // Home: random 20 products
-// Home: random 20 products
+// --------------------
 app.get("/", (req, res) => {
   const sql = "SELECT * FROM forsale ORDER BY RAND() LIMIT 20";
   con.query(sql, (err, result) => {
-    if (err) {
-      console.log("Error fetching products:", err);
-      return res.status(500).json({ success: false, error: "Error fetching data" });
-    }
-    // ✅ Send consistent structure
+    if (err) return res.status(500).json({ success: false, error: "Error fetching data" });
     res.json({ success: true, products: result });
   });
 });
 
-
-// Use Railway’s assigned PORT or default 3000 locally
+// --------------------
+// Start server
+// --------------------
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
