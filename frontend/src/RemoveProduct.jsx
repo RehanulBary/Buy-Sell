@@ -21,7 +21,7 @@ export default function RemoveProduct() {
         setMessage(null);
 
         try {
-            const response = await fetch(`http://localhost:3000/remove_product`, {
+            const response = await fetch(`buy-sell-production-b9f0.up.railway.app/remove_product`, {
                 method: "DELETE",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ productId: inputId, productKey }),

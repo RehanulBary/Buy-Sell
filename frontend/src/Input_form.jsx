@@ -26,7 +26,7 @@ export default function InputForm() {
     if (productImage) formData.append("productImage", productImage);
 
     try {
-      const response = await fetch("http://localhost:3000/enter_data", {
+      const response = await fetch("https://buy-sell-production-b9f0.up.railway.app/enter_data", {
         method: "POST",
         body: formData,
       });

@@ -25,7 +25,7 @@ export default function ProductCard({ products }) {
           {product.image && (
             <div className="w-full aspect-w-1 aspect-h-1 overflow-hidden border-b border-gray-600">
               <img
-                src={`http://localhost:3000/uploads/${product.image}`}
+                src={`https://buy-sell-production-b9f0.up.railway.app/uploads/${product.image}`}
                 alt={product.name}
                 className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
               />

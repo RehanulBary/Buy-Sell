@@ -35,7 +35,7 @@ export default function ProductInfo() {
           {product.image && (
             <div className="md:w-1/2 flex-shrink-0">
               <img
-                src={`http://localhost:3000/uploads/${product.image}`}
+                src={`https://buy-sell-production-b9f0.up.railway.app/uploads/${product.image}`}
                 alt={product.name}
                 className="w-full h-full object-contain"
               />

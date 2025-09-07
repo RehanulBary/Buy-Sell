@@ -22,7 +22,7 @@ export default function GetProduct() {
 
         try {
             const response = await fetch(
-                `http://localhost:3000/get_product?id=${inputId}&key=${productKey}`
+                `https://buy-sell-production-b9f0.up.railway.app/get_product?id=${inputId}&key=${productKey}`
             );
             const data = await response.json();
 

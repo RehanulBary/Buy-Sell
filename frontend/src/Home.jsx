@@ -10,7 +10,7 @@ export default function Home() {
     // Move fetchData outside useEffect
     const fetchData = async () => {
         try {
-            const res = await fetch("http://localhost:3000/", {
+            const res = await fetch("https://buy-sell-production-b9f0.up.railway.app/", {
                 method: "GET",
                 headers: { "Content-Type": "application/json" }
             });
@@ -36,7 +36,7 @@ export default function Home() {
         }
 
         try {
-            const res = await fetch("http://localhost:3000/search_products", {
+            const res = await fetch("https://buy-sell-production-b9f0.up.railway.app/search_products", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ search })
