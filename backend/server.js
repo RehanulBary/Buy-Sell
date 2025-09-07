@@ -3,48 +3,83 @@ import cors from "cors";
 import mysql from "mysql2";
 import multer from "multer";
 import path from "path";
+import { fileURLToPath } from "url";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
+// Multer storage config
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, "uploads/"),
-  filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
+  destination: (req, file, cb) => cb(null, path.join(__dirname, "uploads")),
+  filename: (req, file, cb) =>
+    cb(null, Date.now() + path.extname(file.originalname))
 });
 const upload = multer({ storage });
 
+// MySQL connection (using Railway env vars)
 const con = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "$$596552",
-  database: "SALESDATA"
+  host: process.env.DB_HOST || "localhost",
+  user: process.env.DB_USER || "root",
+  password: process.env.DB_PASSWORD || "",
+  database: process.env.DB_NAME || "SALESDATA",
+  port: process.env.DB_PORT || 3306
 });
 
 con.connect((err) => {
-  if (err) console.log("Error connecting database:", err);
-  else console.log("Database connected");
+  if (err) console.log("❌ Error connecting database:", err);
+  else console.log("✅ Database connected");
 });
 
 // Add product
 app.post("/enter_data", upload.single("productImage"), (req, res) => {
-  const { productName, productPrice, productDescription, productCategory, productContact, productKey, location } = req.body;
+  const {
+    productName,
+    productPrice,
+    productDescription,
+    productCategory,
+    productContact,
+    productKey,
+    location
+  } = req.body;
+
   const imgUrl = req.file ? req.file.filename : null;
 
   const sql = `
     INSERT INTO forsale (name, price, description, category, contact, image, product_key, location)
     VALUES (?,?,?,?,?,?,?,?)
   `;
-  const values = [productName, productPrice, productDescription, productCategory, productContact, imgUrl, productKey, location];
+  const values = [
+    productName,
+    productPrice,
+    productDescription,
+    productCategory,
+    productContact,
+    imgUrl,
+    productKey,
+    location
+  ];
 
   con.query(sql, values, (err, result) => {
     if (err) {
       console.log("Error inserting data:", err);
-      return res.status(500).json({ success: false, error: "Database insertion failed" });
+      return res
+        .status(500)
+        .json({ success: false, error: "Database insertion failed" });
     }
-    res.json({ success: true, message: "Product added successfully", productId: result.insertId });
+    res.json({
+      success: true,
+      message: "Product added successfully",
+      productId: result.insertId
+    });
   });
 });
 
@@ -52,19 +87,21 @@ app.post("/enter_data", upload.single("productImage"), (req, res) => {
 app.get("/get_product", (req, res) => {
   const { id, key } = req.query;
   if (!id) return res.json({ success: false, error: "No product ID provided" });
-  if (!key) return res.json({ success: false, error: "No product key provided" });
+  if (!key)
+    return res.json({ success: false, error: "No product key provided" });
 
   const sql = "SELECT * FROM forsale WHERE id = ?";
   con.query(sql, [id], (err, results) => {
     if (err) return res.json({ success: false, error: "Database error" });
-    if (results.length === 0) return res.json({ success: false, error: "Product not found" });
+    if (results.length === 0)
+      return res.json({ success: false, error: "Product not found" });
 
     const product = results[0];
     if (product.product_key !== key) {
       return res.json({ success: false, error: "Incorrect product key" });
     }
 
-    res.json({ success: true, product }); // product now includes location
+    res.json({ success: true, product });
   });
 });
 
@@ -72,7 +109,9 @@ app.get("/get_product", (req, res) => {
 app.delete("/remove_product", (req, res) => {
   const { productId, productKey } = req.body;
   if (!productId || !productKey) {
-    return res.status(400).json({ success: false, error: "Product ID and Product Key required" });
+    return res
+      .status(400)
+      .json({ success: false, error: "Product ID and Product Key required" });
   }
 
   const sql = "DELETE FROM forsale WHERE id = ? AND product_key = ?";
@@ -97,16 +136,17 @@ app.post("/search_products", (req, res) => {
   let sql = "SELECT * FROM forsale";
   let params = [];
 
-  if (search && search.trim() !== "" && location && location.trim() !== "") {
-    sql += " WHERE (name LIKE ? OR category LIKE ? OR description LIKE ?) AND location LIKE ?";
+  if (search && location) {
+    sql +=
+      " WHERE (name LIKE ? OR category LIKE ? OR description LIKE ?) AND location LIKE ?";
     const searchTerm = `%${search}%`;
     const locationTerm = `%${location}%`;
     params = [searchTerm, searchTerm, searchTerm, locationTerm];
-  } else if (search && search.trim() !== "") {
+  } else if (search) {
     sql += " WHERE name LIKE ? OR category LIKE ? OR description LIKE ?";
     const searchTerm = `%${search}%`;
     params = [searchTerm, searchTerm, searchTerm];
-  } else if (location && location.trim() !== "") {
+  } else if (location) {
     sql += " WHERE location LIKE ?";
     const locationTerm = `%${location}%`;
     params = [locationTerm];
@@ -115,7 +155,8 @@ app.post("/search_products", (req, res) => {
   sql += " ORDER BY id DESC";
 
   con.query(sql, params, (err, results) => {
-    if (err) return res.status(500).json({ success: false, error: "Database error" });
+    if (err)
+      return res.status(500).json({ success: false, error: "Database error" });
     res.json({ success: true, products: results });
   });
 });
@@ -124,9 +165,14 @@ app.post("/search_products", (req, res) => {
 app.get("/", (req, res) => {
   const sql = "SELECT * FROM forsale ORDER BY RAND() LIMIT 20";
   con.query(sql, (err, result) => {
-    if (err) return res.status(500).json({ success: false, error: "Error fetching data" });
+    if (err)
+      return res
+        .status(500)
+        .json({ success: false, error: "Error fetching data" });
     res.send(result);
   });
 });
 
-app.listen(3000, () => console.log("Server running on port 3000"));
+// Use Railway’s assigned PORT or default 3000 locally
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
