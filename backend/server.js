@@ -6,7 +6,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import dotenv from "dotenv";
 
-dotenv.config();
+dotenv.config({ path: './var.env' })
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -27,12 +27,13 @@ const upload = multer({ storage });
 
 // MySQL connection (Railway)
 const con = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
+  host: process.env.DB_HOST,       // should be mysql.railway.internal
+  user: process.env.DB_USER,       // should be root
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  port: process.env.DB_PORT
+  port: Number(process.env.DB_PORT)
 });
+
 
 con.connect((err) => {
   if (err) console.log("❌ Error connecting database:", err);
