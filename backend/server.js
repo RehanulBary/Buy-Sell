@@ -25,19 +25,21 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// MySQL connection
+// MySQL connection (Railway)
 const con = mysql.createConnection({
-  host: process.env.DB_HOST || "localhost",
-  user: process.env.DB_USER || "root",
-  password: process.env.DB_PASSWORD || "",
-  database: process.env.DB_NAME || "SALESDATA",
-  port: process.env.DB_PORT || 3306
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT
 });
 
 con.connect((err) => {
-  if (err) console.error("❌ Error connecting database:", err);
+  if (err) console.log("❌ Error connecting database:", err);
   else console.log("✅ Database connected");
 });
+
+
 
 // --------------------
 // Add product route
