@@ -23,13 +23,15 @@ export default function InputForm() {
     formData.append("productContact", productContact);
     formData.append("productKey", productKey);
     formData.append("location", location); // append location
+    // Only change the fetchData URL to Railway backend
     if (productImage) formData.append("productImage", productImage);
 
     try {
-      const response = await fetch("https://buy-sell-production-b9f0.up.railway.app/enter_data", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        "https://buy-sell-production-b9f0.up.railway.app/enter_data",
+        { method: "POST", body: formData }
+      );
+
 
       const data = await response.json();
 

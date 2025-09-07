@@ -21,11 +21,15 @@ export default function RemoveProduct() {
         setMessage(null);
 
         try {
-            const response = await fetch(`buy-sell-production-b9f0.up.railway.app/remove_product`, {
-                method: "DELETE",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ productId: inputId, productKey }),
-            });
+            const response = await fetch(
+                "https://buy-sell-production-b9f0.up.railway.app/remove_product",
+                {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ productId: inputId, productKey }),
+                }
+            );
+
 
             const data = await response.json();
 

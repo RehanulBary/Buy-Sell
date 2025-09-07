@@ -162,16 +162,19 @@ app.post("/search_products", (req, res) => {
 });
 
 // Home: random 20 products
+// Home: random 20 products
 app.get("/", (req, res) => {
   const sql = "SELECT * FROM forsale ORDER BY RAND() LIMIT 20";
   con.query(sql, (err, result) => {
-    if (err)
-      return res
-        .status(500)
-        .json({ success: false, error: "Error fetching data" });
-    res.send(result);
+    if (err) {
+      console.log("Error fetching products:", err);
+      return res.status(500).json({ success: false, error: "Error fetching data" });
+    }
+    // ✅ Send consistent structure
+    res.json({ success: true, products: result });
   });
 });
+
 
 // Use Railway’s assigned PORT or default 3000 locally
 const PORT = process.env.PORT || 3000;

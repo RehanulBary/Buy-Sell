@@ -18,7 +18,6 @@ export default function ProductInfo() {
 
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col items-center p-4">
-      {/* Back Button */}
       <div className="w-full mb-6">
         <button
           onClick={() => navigate(-1)}
@@ -28,10 +27,8 @@ export default function ProductInfo() {
         </button>
       </div>
 
-      {/* Centered Product Card */}
       <div className="flex flex-grow justify-center items-center w-full">
         <div className="w-full max-w-md sm:max-w-lg md:max-w-4xl bg-gray-800 rounded-lg shadow-lg overflow-hidden flex flex-col md:flex-row">
-          {/* Product Image */}
           {product.image && (
             <div className="md:w-1/2 flex-shrink-0">
               <img
@@ -42,30 +39,25 @@ export default function ProductInfo() {
             </div>
           )}
 
-          {/* Product Details */}
           <div className="md:w-1/2 p-6 flex flex-col justify-center space-y-3">
             <h1 className="text-2xl font-bold text-gray-100 text-center md:text-left">
               {product.name}
             </h1>
 
-            {/* Meta Info: ID, Category, Location */}
             <div className="flex flex-col space-y-1 text-gray-400 text-sm text-center md:text-left">
               <span>Product ID: {product.id}</span>
               <span>Category: {product.category}</span>
               <span>Location: {product.location}</span>
             </div>
 
-            {/* Description */}
             <p className="text-gray-100 text-sm text-center md:text-left">
               {product.description}
             </p>
 
-            {/* Price */}
             <p className="text-lg font-semibold text-gray-100 text-center md:text-left">
               Price: ${product.price}
             </p>
 
-            {/* Contact */}
             <p className="text-gray-400 text-sm text-center md:text-left">
               Seller Contact: {product.contact}
             </p>
