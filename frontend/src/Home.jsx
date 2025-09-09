@@ -24,10 +24,7 @@ export default function Home() {
   }, []);
 
   const handleSearch = async () => {
-    if (!search.trim()) {
-      fetchData();
-      return;
-    }
+    if (!search.trim()) return; // don't search if input is empty
 
     try {
       const res = await fetch("https://buy-sell-production-b9f0.up.railway.app/search_products", {
@@ -41,6 +38,14 @@ export default function Home() {
     } catch (error) {
       console.error("Search failed:", error);
       setProducts([]);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setSearch(value);
+    if (!value.trim()) {
+      fetchData(); // reload all products when input is empty
     }
   };
 
@@ -64,7 +69,7 @@ export default function Home() {
                 className="flex-1 p-2 bg-gray-800 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-600"
                 placeholder="Search..."
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={handleInputChange}
                 onKeyDown={(e) => e.key === "Enter" && handleSearch()}
               />
               <button
@@ -76,7 +81,7 @@ export default function Home() {
             </div>
 
             <button
-              className="ml-0 sm:ml-2 bg-gray-800 text-gray-100 px-5 py-2 rounded-lg shadow-md hover:bg-gray-700 hover:scale-105 transition-all duration-300 w-full sm:w-auto"
+              className="ml-0 sm:ml-2 bg-gray-800 text-gray-100 px-5 py-2 rounded-lg shadow-md hover:bg-gray-700 hover:scale-105 transition-all duration-300 hover:cursor-pointer w-full sm:w-auto"
               onClick={() => navigate("/sell")}
             >
               SELL
