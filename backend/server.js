@@ -42,9 +42,9 @@ con.connect((err) => {
 
 
 // --------------------
-// Add product route
+// Add product route (JSON only, no image upload)
 // --------------------
-app.post("/enter_data", upload.single("productImage"), (req, res) => {
+app.post("/enter_data", (req, res) => {
   const {
     productName,
     productPrice,
@@ -73,15 +73,15 @@ app.post("/enter_data", upload.single("productImage"), (req, res) => {
   // Convert price to number
   const priceNumber = parseFloat(productPrice);
   if (isNaN(priceNumber)) {
-    return res.status(400).json({ success: false, error: "Price must be a number" });
+    return res
+      .status(400)
+      .json({ success: false, error: "Price must be a number" });
   }
-
-  const imgUrl = req.file ? req.file.filename : null;
 
   const sql = `
     INSERT INTO forsale 
-    (name, price, description, category, contact, image, product_key, location)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    (name, price, description, category, contact, product_key, location)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
   `;
   const values = [
     productName,
@@ -89,18 +89,16 @@ app.post("/enter_data", upload.single("productImage"), (req, res) => {
     productDescription,
     productCategory,
     productContact,
-    imgUrl,
     productKey,
     location
   ];
 
   con.query(sql, values, (err, result) => {
     if (err) {
-      console.error("❌ Error inserting data:");
-      console.error("SQL:", sql);
-      console.error("Values:", values);
-      console.error("Error:", err);
-      return res.status(500).json({ success: false, error: "Database insertion failed" });
+      console.error("❌ Error inserting data:", err);
+      return res
+        .status(500)
+        .json({ success: false, error: "Database insertion failed" });
     }
 
     console.log("✅ Product inserted:", result.insertId);
@@ -111,6 +109,7 @@ app.post("/enter_data", upload.single("productImage"), (req, res) => {
     });
   });
 });
+
 
 // --------------------
 // Fetch product
