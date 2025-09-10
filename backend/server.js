@@ -24,18 +24,16 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// MySQL connection (Railway)
-const con = mysql.createConnection({
-  host: process.env.DB_HOST, // mysql.railway.internal
-  user: process.env.DB_USER, // root
+// ✅ Use connection pool
+const pool = mysql.createPool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   port: Number(process.env.DB_PORT),
-});
-
-con.connect((err) => {
-  if (err) console.log("❌ Error connecting database:", err);
-  else console.log("✅ Database connected");
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
 });
 
 // --------------------
@@ -52,7 +50,6 @@ app.post("/enter_data", upload.single("productImage"), (req, res) => {
     location,
   } = req.body;
 
-  // Ensure required fields exist
   if (
     !productName ||
     !productPrice ||
@@ -67,7 +64,6 @@ app.post("/enter_data", upload.single("productImage"), (req, res) => {
       .json({ success: false, error: "All fields are required" });
   }
 
-  // Convert price to number
   const priceNumber = parseFloat(productPrice);
   if (isNaN(priceNumber)) {
     return res
@@ -75,7 +71,6 @@ app.post("/enter_data", upload.single("productImage"), (req, res) => {
       .json({ success: false, error: "Price must be a number" });
   }
 
-  // Handle image path (if uploaded)
   let imagePath = null;
   if (req.file) {
     imagePath = `/uploads/${req.file.filename}`;
@@ -97,7 +92,7 @@ app.post("/enter_data", upload.single("productImage"), (req, res) => {
     imagePath,
   ];
 
-  con.query(sql, values, (err, result) => {
+  pool.query(sql, values, (err, result) => {
     if (err) {
       console.error("❌ Error inserting data:", err);
       return res
@@ -126,7 +121,7 @@ app.get("/get_product", (req, res) => {
       .json({ success: false, error: "Product ID and Key required" });
 
   const sql = "SELECT * FROM forsale WHERE id = ?";
-  con.query(sql, [id], (err, results) => {
+  pool.query(sql, [id], (err, results) => {
     if (err)
       return res.status(500).json({ success: false, error: "Database error" });
     if (results.length === 0)
@@ -155,7 +150,7 @@ app.delete("/remove_product", express.json(), (req, res) => {
       .json({ success: false, error: "Product ID and Product Key required" });
 
   const sql = "DELETE FROM forsale WHERE id = ? AND product_key = ?";
-  con.query(sql, [productId, productKey], (err, result) => {
+  pool.query(sql, [productId, productKey], (err, result) => {
     if (err)
       return res.status(500).json({ success: false, error: "Database error" });
     if (result.affectedRows === 0)
@@ -194,7 +189,7 @@ app.post("/search_products", express.json(), (req, res) => {
 
   sql += " ORDER BY id DESC";
 
-  con.query(sql, params, (err, results) => {
+  pool.query(sql, params, (err, results) => {
     if (err)
       return res.status(500).json({ success: false, error: "Database error" });
     res.json({ success: true, products: results });
@@ -206,7 +201,7 @@ app.post("/search_products", express.json(), (req, res) => {
 // --------------------
 app.get("/", (req, res) => {
   const sql = "SELECT * FROM forsale ORDER BY RAND() LIMIT 20";
-  con.query(sql, (err, result) => {
+  pool.query(sql, (err, result) => {
     if (err)
       return res
         .status(500)
@@ -214,7 +209,6 @@ app.get("/", (req, res) => {
     res.json({ success: true, products: result });
   });
 });
-
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
