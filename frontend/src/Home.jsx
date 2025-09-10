@@ -98,12 +98,12 @@ export default function Home() {
       </nav>
 
       {/* Main Content */}
-      <main className="flex-grow mt-15 w-full flex justify-center">
+      <main className="flex-grow mt-5 sm:mt-15 w-full flex justify-center">
         <ProductCard products={products} />
       </main>
 
       {/* Footer */}
-      <footer className="flex justify-center p-5 bg-gray-800 mt-15 text-white">
+      <footer className="flex justify-center p-5 bg-gray-800 mt-5 sm:mt-15 text-white">
         Let<span className="text-amber-500">'</span>s serve each other 🤝
       </footer>
     </div>
